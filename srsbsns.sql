@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jun 18, 2025 at 03:36 PM
+-- Generation Time: Jun 18, 2025 at 04:39 PM
 -- Server version: 8.0.42-0ubuntu0.24.04.1
 -- PHP Version: 8.3.6
 
@@ -32,7 +32,7 @@ CREATE TABLE `admin_config` (
   `config_key` varchar(100) NOT NULL,
   `config_value` longtext NOT NULL,
   `updated_at` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `admin_config`
@@ -62,6 +62,45 @@ CREATE TABLE `api_call` (
   `user_identifier` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `api_call`
+--
+
+INSERT INTO `api_call` (`id`, `endpoint`, `method`, `status_code`, `user_agent`, `ip_address`, `created_at`, `response_time`, `user_identifier`) VALUES
+(1, '/api/login_check', 'POST', 500, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 Trailer/92.3.2902.22', '192.168.8.102', '2025-06-18 15:40:53', 415.87495803833, NULL),
+(2, '/api/login_check', 'POST', 500, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 Trailer/92.3.2902.22', '192.168.8.102', '2025-06-18 15:49:27', 788.50483894348, NULL),
+(3, '/api/login_check', 'POST', 500, 'curl/8.5.0', '::1', '2025-06-18 15:49:47', 669.60692405701, NULL),
+(4, '/api/login_check', 'POST', 500, 'curl/8.5.0', '::1', '2025-06-18 15:52:03', 453.13715934753, NULL),
+(5, '/api/login_check', 'POST', 500, 'curl/8.5.0', '::1', '2025-06-18 15:54:31', 482.27214813232, NULL),
+(6, '/api/login_check', 'POST', 401, 'curl/8.5.0', '::1', '2025-06-18 15:57:04', 706.72202110291, NULL),
+(7, '/api/login_check', 'POST', 401, 'curl/8.5.0', '::1', '2025-06-18 15:57:24', 434.34906005859, NULL),
+(8, '/api/login_check', 'POST', 401, 'curl/8.5.0', '::1', '2025-06-18 16:00:09', 527.17614173889, NULL),
+(9, '/api/login_check', 'POST', 401, 'curl/8.5.0', '::1', '2025-06-18 16:00:45', 422.09887504578, NULL),
+(10, '/api/login_check', 'POST', 401, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:01:17', 444.63801383972, NULL),
+(11, '/api/login_check', 'POST', 401, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:02:48', 463.60516548157, NULL),
+(12, '/api/login_check', 'POST', 401, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:03:49', 49.111843109131, NULL),
+(13, '/api/login_check', 'POST', 401, 'curl/8.5.0', '::1', '2025-06-18 16:05:52', 97.159862518311, NULL),
+(14, '/api/login_check', 'POST', 500, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:16:51', 798.65717887878, 'apiuser@srsbsns.com'),
+(15, '/api/login_check', 'POST', 500, 'curl/8.5.0', '::1', '2025-06-18 16:19:00', 546.57506942749, 'apiuser@srsbsns.com'),
+(16, '/api/login_check', 'POST', 200, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:23:07', 493.17097663879, 'apiuser@srsbsns.com'),
+(17, '/api/contacts', 'GET', 500, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:23:21', 108.58201980591, 'apiuser@srsbsns.com'),
+(18, '/api/contacts', 'POST', 500, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:23:36', 404.3140411377, 'apiuser@srsbsns.com'),
+(19, '/api/contacts/1', 'GET', 404, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:23:45', 44.94309425354, 'apiuser@srsbsns.com'),
+(20, '/api/login_check', 'POST', 200, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:23:55', 529.16288375854, 'apiuser@srsbsns.com'),
+(21, '/api/contacts', 'GET', 500, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:24:48', 32.634973526001, 'apiuser@srsbsns.com'),
+(22, '/api/login_check', 'POST', 200, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:30:14', 445.5738067627, 'apiuser@srsbsns.com'),
+(23, '/api/contacts', 'GET', 200, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:30:19', 45.035123825073, 'apiuser@srsbsns.com'),
+(24, '/api/contacts', 'POST', 422, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:30:24', 92.530012130737, 'apiuser@srsbsns.com'),
+(25, '/api/contacts/1', 'GET', 404, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:30:32', 49.750804901123, 'apiuser@srsbsns.com'),
+(26, '/api/contacts', 'POST', 422, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:30:57', 39.653062820435, 'apiuser@srsbsns.com'),
+(27, '/api/contacts', 'GET', 200, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:31:07', 28.712034225464, 'apiuser@srsbsns.com'),
+(28, '/api/contacts', 'POST', 422, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:31:11', 34.00993347168, 'apiuser@srsbsns.com'),
+(29, '/api/login_check', 'POST', 200, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:34:33', 455.28602600098, 'apiuser@srsbsns.com'),
+(30, '/api/contacts', 'GET', 200, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:34:39', 19.587993621826, 'apiuser@srsbsns.com'),
+(31, '/api/contacts', 'POST', 201, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:34:42', 61.291933059692, 'apiuser@srsbsns.com'),
+(32, '/api/contacts/1', 'GET', 200, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:34:52', 38.321018218994, 'apiuser@srsbsns.com'),
+(33, '/api/contacts', 'GET', 200, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 LikeWise/96.6.6398.60', '192.168.8.102', '2025-06-18 16:34:57', 19.087076187134, 'apiuser@srsbsns.com');
+
 -- --------------------------------------------------------
 
 --
@@ -76,6 +115,13 @@ CREATE TABLE `contacts` (
   `message` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `contacts`
+--
+
+INSERT INTO `contacts` (`id`, `name`, `email`, `telephone`, `message`, `created_at`) VALUES
+(1, 'Test Contact', 'test@example.com', '+1234567890', 'This is a test message from the API testing interface.', '2025-06-18 16:34:42');
 
 -- --------------------------------------------------------
 
@@ -123,7 +169,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `email`, `roles`, `password`, `first_name`, `last_name`, `is_active`, `created_at`, `updated_at`) VALUES
 (1, 'admin@srsbsns.com', '[\"ROLE_ADMIN\"]', '$2y$13$HzEqFfaFwDtGCGR4MBhBK.yJo7uz7GRwS4XmCjyF7UuGi6/A5PROi', 'Admin', 'User', 1, '2025-06-17 19:14:19', NULL),
-(2, 'apiuser@srsbsns.com', '[\"ROLE_API_USER\"]', '$2y$13$6.lOe0KtZl.3k7oM7lY.D.xY1M4xVrNkJMPdEUcLcJYWEpjgKF8zS', 'API', 'User', 1, '2025-06-18 05:02:35', NULL);
+(2, 'apiuser@srsbsns.com', '[\"ROLE_API_USER\"]', '$2y$13$6axcgqvNW3VN4CI9Q6tjqe9rJzq5ggvZwg3RIHVoY5wB9z7yvA7NS', 'API', 'User', 1, '2025-06-18 05:02:35', NULL);
 
 --
 -- Indexes for dumped tables
@@ -176,13 +222,13 @@ ALTER TABLE `admin_config`
 -- AUTO_INCREMENT for table `api_call`
 --
 ALTER TABLE `api_call`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `contacts`
 --
 ALTER TABLE `contacts`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`
