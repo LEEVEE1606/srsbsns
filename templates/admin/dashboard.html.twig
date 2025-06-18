@@ -59,10 +59,9 @@
                                 </li>
                                 <li><a class="dropdown-item" href="#">Today</a></li>
                                 <li><a class="dropdown-item" href="#">This Month</a></li>
-                                <li><a class="dropdown-item" href="#">This Year</a></li>
+                                <li><a class="dropdown-item" href="#">All Time</a></li>
                             </ul>
                         </div>
-
                         <div class="card-body">
                             <h5 class="card-title">API Calls <span>| This Month</span></h5>
                             <div class="d-flex align-items-center">
@@ -70,8 +69,9 @@
                                     <i class="bi bi-code-slash"></i>
                                 </div>
                                 <div class="ps-3">
-                                    <h6>342</h6>
-                                    <span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span>
+                                    <h6>{{ api_calls_this_month }}</h6>
+                                    <span class="text-success small pt-1 fw-bold">Today: {{ api_calls_today }}</span><br>
+                                    <span class="text-muted small pt-2 ps-1">Total: {{ api_calls_total }}</span>
                                 </div>
                             </div>
                         </div>
@@ -149,6 +149,70 @@
                                     <tr>
                                         <td colspan="5" class="text-center text-muted">No contact messages yet</td>
                                     </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Live API Stats Section -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">API Stats <span>| This Month</span></h5>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="stat-box">
+                                        <strong>Successful Calls</strong><br>
+                                        <span class="text-success">{{ api_calls_success }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="stat-box">
+                                        <strong>Avg. Response (ms)</strong><br>
+                                        <span class="text-primary">{{ api_avg_response }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="stat-box">
+                                        <strong>Top Endpoints</strong><br>
+                                        <ul class="mb-0">
+                                            {% for endpoint in api_top_endpoints %}
+                                                <li><code>{{ endpoint.endpoint }}</code> ({{ endpoint.callCount }})</li>
+                                            {% else %}
+                                                <li class="text-muted">No data</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <strong>Recent API Calls</strong>
+                            <table class="table table-sm table-bordered mt-2">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Endpoint</th>
+                                        <th>Method</th>
+                                        <th>Status</th>
+                                        <th>User</th>
+                                        <th>Resp. (ms)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for call in api_recent_calls %}
+                                        <tr>
+                                            <td>{{ call.createdAt|date('Y-m-d H:i:s') }}</td>
+                                            <td><code>{{ call.endpoint }}</code></td>
+                                            <td>{{ call.method }}</td>
+                                            <td>{{ call.statusCode }}</td>
+                                            <td>{{ call.userIdentifier ?: '-' }}</td>
+                                            <td>{{ call.responseTime ? call.responseTime|number_format(2) : '-' }}</td>
+                                        </tr>
+                                    {% else %}
+                                        <tr><td colspan="6" class="text-center text-muted">No API calls yet</td></tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
