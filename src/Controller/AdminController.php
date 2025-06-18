@@ -55,9 +55,25 @@ class AdminController extends AbstractController
         $recentContacts = $contactRepo->findBy([], ['createdAt' => 'DESC'], 5);
         $totalContacts = $contactRepo->count([]);
 
+        $apiCallRepo = $this->entityManager->getRepository(\App\Entity\ApiCall::class);
+        $apiCallsThisMonth = $apiCallRepo->getCallsThisMonth();
+        $apiCallsToday = $apiCallRepo->getCallsToday();
+        $apiCallsTotal = $apiCallRepo->getTotalCalls();
+        $apiCallsSuccess = $apiCallRepo->getSuccessfulCallsThisMonth();
+        $apiAvgResponse = $apiCallRepo->getAverageResponseTimeThisMonth();
+        $apiTopEndpoints = $apiCallRepo->getTopEndpointsThisMonth(5);
+        $apiRecentCalls = $apiCallRepo->getRecentCalls(5);
+
         return $this->render('admin/dashboard.html.twig', [
             'recent_contacts' => $recentContacts,
             'total_contacts' => $totalContacts,
+            'api_calls_this_month' => $apiCallsThisMonth,
+            'api_calls_today' => $apiCallsToday,
+            'api_calls_total' => $apiCallsTotal,
+            'api_calls_success' => $apiCallsSuccess,
+            'api_avg_response' => $apiAvgResponse,
+            'api_top_endpoints' => $apiTopEndpoints,
+            'api_recent_calls' => $apiRecentCalls,
         ]);
     }
 
