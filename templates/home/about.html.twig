@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}About - SRSBSNS Test App{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold text-primary">About SRSBSNS Test App</h1>
+                <p class="lead text-muted">Learn more about this comprehensive Symfony application</p>
+            </div>
+
+            <div class="card shadow-lg border-0 mb-5">
+                <div class="card-body p-5">
+                    <h2 class="h3 mb-4">Project Overview</h2>
+                    <p class="mb-4">
+                        The SRSBSNS Test App is a comprehensive demonstration of modern web development practices 
+                        using Symfony 7.3, showcasing a full-stack application with advanced features including 
+                        contact management, API development, and administrative functionality.
+                    </p>
+                    
+                    <h3 class="h4 mb-3">Key Features</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Contact form with email notifications and reCAPTCHA protection</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>RESTful API with JWT authentication and comprehensive documentation</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Professional admin panel using NiceAdmin template</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Responsive design with Bootstrap 5</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Database integration with Doctrine ORM</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Custom services and form handling</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h4 class="card-title"><i class="fas fa-user text-primary me-2"></i>Developer</h4>
+                            <h5>Lee van Rensburg</h5>
+                            <p class="card-text">
+                                Experienced full-stack developer specializing in modern web technologies 
+                                and best practices in software development.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h4 class="card-title"><i class="fas fa-code text-primary me-2"></i>Technology</h4>
+                            <p class="card-text">
+                                Built with Symfony 7.3, this application demonstrates modern PHP development 
+                                patterns, security best practices, and scalable architecture design.
+                            </p>
+                            <div class="mt-3">
+                                <span class="badge bg-primary me-1">Symfony 7.3</span>
+                                <span class="badge bg-secondary me-1">PHP 8.2+</span>
+                                <span class="badge bg-success me-1">Bootstrap 5</span>
+                                <span class="badge bg-warning me-1">MySQL</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

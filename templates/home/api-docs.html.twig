@@ -1,0 +1,224 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}API Documentation - SRSBSNS Test App{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold text-primary">API Documentation</h1>
+                <p class="lead text-muted">Complete guide to the SRSBSNS REST API</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card sticky-top" style="top: 100px;">
+                <div class="card-header">
+                    <h5 class="mb-0">Table of Contents</h5>
+                </div>
+                <div class="card-body">
+                    <nav class="nav nav-pills flex-column">
+                        <a class="nav-link" href="#authentication">Authentication</a>
+                        <a class="nav-link" href="#contacts">Contacts API</a>
+                        <a class="nav-link" href="#examples">Examples</a>
+                        <a class="nav-link" href="#errors">Error Handling</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9">
+            <!-- Authentication Section -->
+            <section id="authentication" class="mb-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="h3 mb-0"><i class="fas fa-lock text-warning me-2"></i>Authentication</h2>
+                    </div>
+                    <div class="card-body">
+                        <p>The API uses JWT (JSON Web Token) authentication. To access protected endpoints, you need to obtain a token first.</p>
+                        
+                        <h4>Login</h4>
+                        <div class="bg-dark text-light p-3 rounded mb-3">
+                            <code>POST /api/login_check</code>
+                        </div>
+                        
+                        <p><strong>Request Body:</strong></p>
+                        <pre><code>{
+    "username": "apiuser",
+    "password": "api123"
+}</code></pre>
+                        
+                        <p><strong>Response:</strong></p>
+                        <pre><code>{
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..."
+}</code></pre>
+                        
+                        <div class="alert alert-info">
+                            <strong>Demo Credentials:</strong><br>
+                            Username: <code>apiuser</code><br>
+                            Password: <code>api123</code>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contacts API Section -->
+            <section id="contacts" class="mb-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="h3 mb-0"><i class="fas fa-envelope text-primary me-2"></i>Contacts API</h2>
+                    </div>
+                    <div class="card-body">
+                        <p>Manage contact submissions through the API.</p>
+                        
+                        <h4>Get All Contacts</h4>
+                        <div class="bg-dark text-light p-3 rounded mb-3">
+                            <code>GET /api/contacts</code>
+                        </div>
+                        <p><strong>Headers:</strong> <code>Authorization: Bearer {token}</code></p>
+                        
+                        <h4>Get Single Contact</h4>
+                        <div class="bg-dark text-light p-3 rounded mb-3">
+                            <code>GET /api/contacts/{id}</code>
+                        </div>
+                        
+                        <h4>Create Contact</h4>
+                        <div class="bg-dark text-light p-3 rounded mb-3">
+                            <code>POST /api/contacts</code>
+                        </div>
+                        <p><strong>Request Body:</strong></p>
+                        <pre><code>{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "telephone": "+1234567890",
+    "message": "Hello, this is a test message."
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Examples Section -->
+            <section id="examples" class="mb-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="h3 mb-0"><i class="fas fa-code text-success me-2"></i>Examples</h2>
+                    </div>
+                    <div class="card-body">
+                        <h4>JavaScript Example</h4>
+                        <pre><code>// Login and get token
+fetch('/api/login_check', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        username: 'apiuser',
+        password: 'api123'
+    })
+})
+.then(response => response.json())
+.then(data => {
+    const token = data.token;
+    
+    // Use token to create a contact
+    return fetch('/api/contacts', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            name: 'Jane Doe',
+            email: 'jane@example.com',
+            telephone: '+1987654321',
+            message: 'API test message'
+        })
+    });
+})
+.then(response => response.json())
+.then(contact => console.log('Contact created:', contact));</code></pre>
+                        
+                        <h4>cURL Example</h4>
+                        <pre><code># Get token
+curl -X POST /api/login_check \
+  -H "Content-Type: application/json" \
+  -d '{"username":"apiuser","password":"api123"}'
+
+# Create contact
+curl -X POST /api/contacts \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -d '{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "telephone": "+1234567890",
+    "message": "Hello from API"
+  }'</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Error Handling Section -->
+            <section id="errors" class="mb-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="h3 mb-0"><i class="fas fa-exclamation-triangle text-danger me-2"></i>Error Handling</h2>
+                    </div>
+                    <div class="card-body">
+                        <p>The API returns standard HTTP status codes:</p>
+                        
+                        <ul>
+                            <li><strong>200</strong> - Success</li>
+                            <li><strong>201</strong> - Created successfully</li>
+                            <li><strong>400</strong> - Bad request (validation errors)</li>
+                            <li><strong>401</strong> - Unauthorized (invalid or missing token)</li>
+                            <li><strong>403</strong> - Forbidden (insufficient permissions)</li>
+                            <li><strong>404</strong> - Not found</li>
+                            <li><strong>500</strong> - Internal server error</li>
+                        </ul>
+                        
+                        <h4>Error Response Format</h4>
+                        <pre><code>{
+    "error": "Validation Failed",
+    "message": "name: This value should not be blank."
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Interactive API Explorer -->
+            <section class="mb-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="h3 mb-0"><i class="fas fa-play text-info me-2"></i>Interactive API Explorer</h2>
+                    </div>
+                    <div class="card-body">
+                        <p>Want to explore the API interactively? Use our built-in API Platform documentation:</p>
+                        <a href="/api" target="_blank" class="btn btn-primary btn-lg">
+                            <i class="fas fa-external-link-alt me-2"></i>Open API Platform Interface
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a.nav-link[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+{% endblock %} 

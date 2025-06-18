@@ -1,0 +1,8 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # If the request is for the root URL
+    RewriteCond %{REQUEST_URI} ^/?$
+    RewriteRule ^$ /public/index.php [L,R=302]
+</IfModule>
+

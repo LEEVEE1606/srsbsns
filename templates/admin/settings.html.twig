@@ -1,0 +1,146 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Settings - Admin{% endblock %}
+
+{% block main_content %}
+<div class="pagetitle">
+    <h1>Settings</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('admin_dashboard') }}">Home</a></li>
+            <li class="breadcrumb-item active">Settings</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Application Settings</h5>
+
+                    <form method="post" class="row g-3 needs-validation" novalidate>
+                        <div class="col-12">
+                            <label for="admin_email" class="form-label">Admin Email Address</label>
+                            <div class="input-group has-validation">
+                                <span class="input-group-text" id="inputGroupPrepend">@</span>
+                                <input type="email" name="admin_email" value="{{ admin_email }}" class="form-control" id="admin_email" required>
+                                <div class="invalid-feedback">Please enter a valid admin email address.</div>
+                            </div>
+                            <div class="form-text">This email will receive notifications from contact form submissions.</div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="cc_email" class="form-label">CC Email Address (Optional)</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="inputGroupPrepend2">@</span>
+                                <input type="email" name="cc_email" value="{{ cc_email }}" class="form-control" id="cc_email">
+                            </div>
+                            <div class="form-text">Optional CC recipient for contact form notifications. Leave blank to disable.</div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="recaptcha_site_key" class="form-label">reCAPTCHA Site Key</label>
+                            <input type="text" name="recaptcha_site_key" value="{{ recaptcha_site_key }}" class="form-control" id="recaptcha_site_key">
+                            <div class="form-text">Get your reCAPTCHA keys from <a href="https://www.google.com/recaptcha/admin" target="_blank">Google reCAPTCHA Admin</a>.</div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="recaptcha_secret_key" class="form-label">reCAPTCHA Secret Key</label>
+                            <input type="password" name="recaptcha_secret_key" value="{{ recaptcha_secret_key }}" class="form-control" id="recaptcha_secret_key">
+                            <div class="form-text">This key is used for server-side validation.</div>
+                        </div>
+
+                        <div class="col-12">
+                            <button class="btn btn-primary" type="submit">Save Settings</button>
+                            <button class="btn btn-secondary" type="reset">Reset</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">System Information</h5>
+                    
+                    <ul class="list-unstyled">
+                        <li><strong>Symfony Version:</strong> {{ constant('Symfony\\Component\\HttpKernel\\Kernel::VERSION') }}</li>
+                        <li><strong>PHP Version:</strong> {{ constant('PHP_VERSION') }}</li>
+                        <li><strong>Environment:</strong> {{ app.environment }}</li>
+                        <li><strong>Debug Mode:</strong> {{ app.debug ? 'Enabled' : 'Disabled' }}</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Quick Links</h5>
+                    
+                    <div class="d-grid gap-2">
+                        <a href="https://www.google.com/recaptcha/admin" target="_blank" class="btn btn-outline-primary">
+                            <i class="bi bi-shield-check me-2"></i>reCAPTCHA Admin
+                        </a>
+                        <a href="https://symfony.com/doc/current/" target="_blank" class="btn btn-outline-info">
+                            <i class="bi bi-book me-2"></i>Symfony Docs
+                        </a>
+                        <a href="{{ path('app_home') }}" target="_blank" class="btn btn-outline-success">
+                            <i class="bi bi-house me-2"></i>View Website
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Configuration Tips</h5>
+                    
+                    <div class="alert alert-info">
+                        <small>
+                            <strong>Email Setup:</strong> Make sure to configure your MAILER_DSN in the environment file for email notifications to work.
+                        </small>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <small>
+                            <strong>reCAPTCHA:</strong> To enable reCAPTCHA protection, you need to register your domain with Google reCAPTCHA and add the keys here.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Bootstrap form validation
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+
+        // Toggle password visibility
+        document.getElementById('recaptcha_secret_key').addEventListener('focus', function() {
+            this.type = 'text';
+        });
+        document.getElementById('recaptcha_secret_key').addEventListener('blur', function() {
+            this.type = 'password';
+        });
+    </script>
+{% endblock %} 

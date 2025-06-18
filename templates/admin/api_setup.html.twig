@@ -1,0 +1,452 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}API Setup - Admin{% endblock %}
+
+{% block main_content %}
+<div class="pagetitle">
+    <h1>API Setup</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('admin_dashboard') }}">Home</a></li>
+            <li class="breadcrumb-item active">API Setup</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">API Configuration</h5>
+
+                    <div class="alert alert-info">
+                        <h6><i class="bi bi-info-circle"></i> API Platform Integration</h6>
+                        <p class="mb-0">
+                            This application includes a fully functional REST API powered by API Platform. 
+                            The API provides endpoints for managing contact submissions with JWT authentication.
+                        </p>
+                    </div>
+
+                    <h6>API Endpoints</h6>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Method</th>
+                                    <th>Endpoint</th>
+                                    <th>Description</th>
+                                    <th>Auth Required</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="badge bg-success">POST</span></td>
+                                    <td><code>/api/login_check</code></td>
+                                    <td>Authenticate and get JWT token</td>
+                                    <td><i class="bi bi-check-circle text-success"></i> Public</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-primary">GET</span></td>
+                                    <td><code>/api/contacts</code></td>
+                                    <td>List all contacts</td>
+                                    <td><i class="bi bi-check-circle text-success"></i></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-primary">GET</span></td>
+                                    <td><code>/api/contacts/{id}</code></td>
+                                    <td>Get single contact</td>
+                                    <td><i class="bi bi-check-circle text-success"></i></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-success">POST</span></td>
+                                    <td><code>/api/contacts</code></td>
+                                    <td>Create new contact</td>
+                                    <td><i class="bi bi-check-circle text-success"></i></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h6 class="mt-4">API Credentials</h6>
+                    <div class="alert alert-warning">
+                        <h6><i class="bi bi-exclamation-triangle"></i> Demo Credentials</h6>
+                        <p><strong>Email:</strong> <code>apiuser@srsbsns.com</code></p>
+                        <p><strong>Password:</strong> <code>api123</code></p>
+                        <p class="mb-0"><small>These are demo credentials stored in the database.</small></p>
+                    </div>
+
+                    <h6>Test API Token</h6>
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <form id="tokenForm">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <input type="email" class="form-control" id="username" placeholder="Email" value="apiuser@srsbsns.com">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="password" class="form-control" id="password" placeholder="Password" value="api123">
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-primary">Get JWT Token</button>
+                                        <button type="button" class="btn btn-outline-secondary" onclick="clearToken()">Clear</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="mt-3">
+                                <label for="tokenResult" class="form-label">JWT Token:</label>
+                                <textarea class="form-control" id="tokenResult" rows="3" placeholder="JWT token will appear here..." readonly></textarea>
+                                <div class="mt-2">
+                                    <button type="button" class="btn btn-sm btn-outline-info" onclick="copyToken()" id="copyBtn" style="display: none;">
+                                        <i class="bi bi-clipboard"></i> Copy Token
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="mt-4">Live API Testing</h6>
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <form id="apiTestForm">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label for="apiEndpoint" class="form-label">Select API Endpoint:</label>
+                                        <select class="form-select" id="apiEndpoint" onchange="updateEndpointInfo()">
+                                            <option value="login">POST /api/login_check - Get JWT Token</option>
+                                            <option value="contacts_list">GET /api/contacts - List all contacts</option>
+                                            <option value="contacts_create">POST /api/contacts - Create new contact</option>
+                                            <option value="contacts_single">GET /api/contacts/{id} - Get single contact</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12" id="requestBodyContainer" style="display: none;">
+                                        <label for="requestBody" class="form-label">Request Body (JSON):</label>
+                                        <textarea class="form-control" id="requestBody" rows="4" placeholder="Enter JSON request body..."></textarea>
+                                    </div>
+                                    <div class="col-12" id="contactIdContainer" style="display: none;">
+                                        <label for="contactId" class="form-label">Contact ID:</label>
+                                        <input type="number" class="form-control" id="contactId" placeholder="Enter contact ID (e.g., 1)" min="1">
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="bi bi-play-circle me-2"></i>Test API Request
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary" onclick="clearApiResult()">Clear Result</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="mt-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label for="apiResult" class="form-label">Response:</label>
+                                    <div id="responseStatus" class="badge" style="display: none;"></div>
+                                </div>
+                                <textarea class="form-control" id="apiResult" rows="6" placeholder="API response will appear here..." readonly></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Quick Links</h5>
+                    
+                    <div class="d-grid gap-2">
+                        <a href="/api" target="_blank" class="btn btn-primary">
+                            <i class="bi bi-code-slash me-2"></i>API Platform UI
+                        </a>
+                        <a href="{{ path('app_api_docs') }}" target="_blank" class="btn btn-outline-primary">
+                            <i class="bi bi-book me-2"></i>API Documentation
+                        </a>
+                        <a href="https://api-platform.com/docs/" target="_blank" class="btn btn-outline-info">
+                            <i class="bi bi-question-circle me-2"></i>API Platform Docs
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">API Statistics</h5>
+                    
+                    <ul class="list-unstyled">
+                        <li><strong>Total Endpoints:</strong> 4</li>
+                        <li><strong>Authentication:</strong> JWT</li>
+                        <li><strong>Format:</strong> JSON</li>
+                        <li><strong>Status:</strong> <span class="badge bg-success">Active</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Example Request</h5>
+                    
+                    <pre><code>curl -X POST /api/login_check \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "apiuser@srsbsns.com",
+    "password": "api123"
+  }'</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Security Notes</h5>
+                    
+                    <div class="alert alert-warning">
+                        <small>
+                            <i class="bi bi-shield-exclamation"></i>
+                            <strong>Production:</strong> Change default credentials before deploying to production.
+                        </small>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <small>
+                            <i class="bi bi-info-circle"></i>
+                            <strong>CORS:</strong> Configure CORS settings for cross-origin requests.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.getElementById('tokenForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const tokenResult = document.getElementById('tokenResult');
+            const copyBtn = document.getElementById('copyBtn');
+            
+            try {
+                // Get the base URL for API requests
+                const baseUrl = window.location.origin + '/srsbsns/public';
+                
+                const response = await fetch(baseUrl + '/api/login_check', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: username,
+                        password: password
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.token) {
+                    tokenResult.value = data.token;
+                    copyBtn.style.display = 'inline-block';
+                    
+                    // Show success toast
+                    showToast('JWT token generated successfully!', 'success');
+                } else {
+                    tokenResult.value = 'Error: ' + (data.message || 'Authentication failed');
+                    copyBtn.style.display = 'none';
+                    showToast('Authentication failed', 'danger');
+                }
+            } catch (error) {
+                tokenResult.value = 'Error: ' + error.message;
+                copyBtn.style.display = 'none';
+                showToast('Network error occurred', 'danger');
+            }
+        });
+        
+        function copyToken() {
+            const tokenResult = document.getElementById('tokenResult');
+            tokenResult.select();
+            navigator.clipboard.writeText(tokenResult.value);
+            showToast('Token copied to clipboard!', 'success');
+        }
+        
+        function clearToken() {
+            document.getElementById('tokenResult').value = '';
+            document.getElementById('copyBtn').style.display = 'none';
+        }
+        
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-white bg-${type} border-0 position-fixed`;
+            toast.style.top = '20px';
+            toast.style.right = '20px';
+            toast.style.zIndex = '9999';
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">${message}</div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `;
+            document.body.appendChild(toast);
+            const bsToast = new bootstrap.Toast(toast);
+            bsToast.show();
+            
+            toast.addEventListener('hidden.bs.toast', function() {
+                document.body.removeChild(toast);
+            });
+        }
+
+        // Live API Testing Functions
+        function updateEndpointInfo() {
+            const endpoint = document.getElementById('apiEndpoint').value;
+            const requestBodyContainer = document.getElementById('requestBodyContainer');
+            const contactIdContainer = document.getElementById('contactIdContainer');
+            const requestBody = document.getElementById('requestBody');
+
+            // Hide all containers first
+            requestBodyContainer.style.display = 'none';
+            contactIdContainer.style.display = 'none';
+
+            // Show relevant inputs based on endpoint
+            switch(endpoint) {
+                                                case 'login':
+                                    requestBodyContainer.style.display = 'block';
+                                    requestBody.value = JSON.stringify({
+                                        email: "apiuser@srsbsns.com",
+                                        password: "api123"
+                                    }, null, 2);
+                    break;
+                case 'contacts_create':
+                    requestBodyContainer.style.display = 'block';
+                    requestBody.value = JSON.stringify({
+                        name: "Test Contact",
+                        email: "test@example.com",
+                        subject: "API Test",
+                        message: "This is a test message from the API testing interface."
+                    }, null, 2);
+                    break;
+                case 'contacts_single':
+                    contactIdContainer.style.display = 'block';
+                    document.getElementById('contactId').value = '1';
+                    break;
+            }
+        }
+
+        function clearApiResult() {
+            document.getElementById('apiResult').value = '';
+            document.getElementById('responseStatus').style.display = 'none';
+        }
+
+        // Initialize endpoint info on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateEndpointInfo();
+        });
+
+        // API Test Form Handler
+        document.getElementById('apiTestForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const endpoint = document.getElementById('apiEndpoint').value;
+            const apiResult = document.getElementById('apiResult');
+            const responseStatus = document.getElementById('responseStatus');
+            
+            // Get current JWT token
+            const token = document.getElementById('tokenResult').value;
+            
+            let url, method, body, headers = {
+                'Content-Type': 'application/json',
+            };
+
+            // Get the base URL for API requests
+            const baseUrl = window.location.origin + '/srsbsns/public';
+            
+            // Configure request based on endpoint
+            switch(endpoint) {
+                case 'login':
+                    url = baseUrl + '/api/login_check';
+                    method = 'POST';
+                    body = document.getElementById('requestBody').value;
+                    break;
+                case 'contacts_list':
+                    url = baseUrl + '/api/contacts';
+                    method = 'GET';
+                    if (token && token !== '' && !token.startsWith('Error:')) {
+                        headers['Authorization'] = `Bearer ${token}`;
+                    }
+                    break;
+                case 'contacts_create':
+                    url = baseUrl + '/api/contacts';
+                    method = 'POST';
+                    body = document.getElementById('requestBody').value;
+                    if (token && token !== '' && !token.startsWith('Error:')) {
+                        headers['Authorization'] = `Bearer ${token}`;
+                    }
+                    break;
+                case 'contacts_single':
+                    const contactId = document.getElementById('contactId').value;
+                    if (!contactId) {
+                        showToast('Please enter a contact ID', 'warning');
+                        return;
+                    }
+                    url = baseUrl + `/api/contacts/${contactId}`;
+                    method = 'GET';
+                    if (token && token !== '' && !token.startsWith('Error:')) {
+                        headers['Authorization'] = `Bearer ${token}`;
+                    }
+                    break;
+                default:
+                    showToast('Invalid endpoint selected', 'danger');
+                    return;
+            }
+
+            // Show loading state
+            apiResult.value = 'Making request...';
+            responseStatus.style.display = 'none';
+
+            try {
+                const requestOptions = {
+                    method: method,
+                    headers: headers
+                };
+
+                if (body) {
+                    requestOptions.body = body;
+                }
+
+                const response = await fetch(url, requestOptions);
+                const responseData = await response.text();
+                
+                // Try to parse as JSON for pretty formatting
+                let formattedResponse;
+                try {
+                    const jsonData = JSON.parse(responseData);
+                    formattedResponse = JSON.stringify(jsonData, null, 2);
+                } catch {
+                    formattedResponse = responseData;
+                }
+
+                // Update result area
+                apiResult.value = formattedResponse;
+                
+                // Show status badge
+                responseStatus.style.display = 'inline-block';
+                if (response.ok) {
+                    responseStatus.className = 'badge bg-success';
+                    responseStatus.textContent = `${response.status} ${response.statusText}`;
+                    showToast('API request successful!', 'success');
+                } else {
+                    responseStatus.className = 'badge bg-danger';
+                    responseStatus.textContent = `${response.status} ${response.statusText}`;
+                    showToast('API request failed', 'danger');
+                }
+
+            } catch (error) {
+                apiResult.value = `Error: ${error.message}`;
+                responseStatus.style.display = 'inline-block';
+                responseStatus.className = 'badge bg-danger';
+                responseStatus.textContent = 'Network Error';
+                showToast('Network error occurred', 'danger');
+            }
+        });
+    </script>
+{% endblock %} 

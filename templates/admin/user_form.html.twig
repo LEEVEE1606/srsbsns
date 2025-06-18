@@ -1,0 +1,241 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}{{ user ? 'Edit User' : 'Create User' }} - Admin{% endblock %}
+
+{% block main_content %}
+<div class="pagetitle">
+    <h1>{{ user ? 'Edit User' : 'Create User' }}</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('admin_dashboard') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('admin_users') }}">User Management</a></li>
+            <li class="breadcrumb-item active">{{ user ? 'Edit User' : 'Create User' }}</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ user ? 'Edit User Details' : 'Create New User' }}</h5>
+
+                    <form method="post" class="row g-3 needs-validation" novalidate>
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email Address *</label>
+                            <input type="email" 
+                                   class="form-control" 
+                                   id="email" 
+                                   name="email" 
+                                   value="{{ user ? user.email : '' }}" 
+                                   required>
+                            <div class="invalid-feedback">
+                                Please provide a valid email address.
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="password" class="form-label">
+                                Password {{ user ? '(leave empty to keep current)' : '*' }}
+                            </label>
+                            <input type="password" 
+                                   class="form-control" 
+                                   id="password" 
+                                   name="password" 
+                                   {{ user ? '' : 'required' }}>
+                            <div class="invalid-feedback">
+                                Please provide a password.
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="first_name" class="form-label">First Name *</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="first_name" 
+                                   name="first_name" 
+                                   value="{{ user ? user.firstName : '' }}" 
+                                   required>
+                            <div class="invalid-feedback">
+                                Please provide a first name.
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="last_name" class="form-label">Last Name *</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="last_name" 
+                                   name="last_name" 
+                                   value="{{ user ? user.lastName : '' }}" 
+                                   required>
+                            <div class="invalid-feedback">
+                                Please provide a last name.
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">User Roles *</label>
+                            <div class="row">
+                                {% for role_key, role_name in available_roles %}
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" 
+                                                   type="checkbox" 
+                                                   id="role_{{ role_key }}" 
+                                                   name="roles[]" 
+                                                   value="{{ role_key }}"
+                                                   {% if user and role_key in user.roles %}checked{% endif %}>
+                                            <label class="form-check-label" for="role_{{ role_key }}">
+                                                {{ role_name }}
+                                                {% if role_key == 'ROLE_ADMIN' %}
+                                                    <span class="badge bg-danger ms-1">Admin</span>
+                                                {% elseif role_key == 'ROLE_API_USER' %}
+                                                    <span class="badge bg-success ms-1">API</span>
+                                                {% endif %}
+                                            </label>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="form-text">
+                                Select one or more roles for this user. Users with ROLE_ADMIN can access the admin panel.
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" 
+                                       type="checkbox" 
+                                       id="is_active" 
+                                       name="is_active" 
+                                       value="1"
+                                       {% if not user or user.isActive %}checked{% endif %}>
+                                <label class="form-check-label" for="is_active">
+                                    <strong>Active User</strong>
+                                    <div class="form-text">
+                                        Inactive users cannot log in to the system.
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                <a href="{{ path('admin_users') }}" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-left me-1"></i>Back to Users
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-circle me-1"></i>{{ user ? 'Update User' : 'Create User' }}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            {% if user %}
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">User Information</h5>
+                        
+                        <ul class="list-unstyled">
+                            <li><strong>ID:</strong> {{ user.id }}</li>
+                            <li><strong>Email:</strong> {{ user.email }}</li>
+                            <li><strong>Status:</strong> 
+                                {% if user.isActive %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Inactive</span>
+                                {% endif %}
+                            </li>
+                            <li><strong>Created:</strong> {{ user.createdAt|date('M j, Y g:i A') }}</li>
+                            {% if user.updatedAt %}
+                                <li><strong>Updated:</strong> {{ user.updatedAt|date('M j, Y g:i A') }}</li>
+                            {% endif %}
+                        </ul>
+
+                        {% if user.hasRole('ROLE_ADMIN') %}
+                            <div class="alert alert-info">
+                                <i class="bi bi-shield-check me-2"></i>
+                                This user has administrative privileges.
+                            </div>
+                        {% endif %}
+
+                        {% if user.hasRole('ROLE_API_USER') %}
+                            <div class="alert alert-success">
+                                <i class="bi bi-code-slash me-2"></i>
+                                This user can access the API.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">User Roles Guide</h5>
+                        
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <span class="badge bg-secondary">ROLE_USER</span>
+                                <div class="form-text">Basic user access</div>
+                            </li>
+                            <li class="mb-2">
+                                <span class="badge bg-danger">ROLE_ADMIN</span>
+                                <div class="form-text">Full administrative access</div>
+                            </li>
+                            <li class="mb-2">
+                                <span class="badge bg-success">ROLE_API_USER</span>
+                                <div class="form-text">API access for integrations</div>
+                            </li>
+                        </ul>
+
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            <strong>Note:</strong> Users with ROLE_ADMIN can access this admin panel and manage other users.
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<script>
+// Bootstrap form validation
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+
+// Ensure at least one role is selected
+document.addEventListener('DOMContentLoaded', function() {
+    const roleCheckboxes = document.querySelectorAll('input[name="roles[]"]');
+    const form = document.querySelector('form');
+    
+    form.addEventListener('submit', function(e) {
+        const checkedRoles = document.querySelectorAll('input[name="roles[]"]:checked');
+        if (checkedRoles.length === 0) {
+            e.preventDefault();
+            alert('Please select at least one role for the user.');
+            return false;
+        }
+    });
+});
+</script>
+{% endblock %} 

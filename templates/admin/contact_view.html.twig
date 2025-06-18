@@ -1,0 +1,151 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}View Contact #{{ contact.id }} - Admin{% endblock %}
+
+{% block main_content %}
+<div class="pagetitle">
+    <h1>Contact Message #{{ contact.id }}</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('admin_dashboard') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('admin_contacts') }}">Contacts</a></li>
+            <li class="breadcrumb-item active">Message #{{ contact.id }}</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Contact Details</h5>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <strong>Name:</strong>
+                        </div>
+                        <div class="col-sm-9">
+                            {{ contact.name }}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <strong>Email:</strong>
+                        </div>
+                        <div class="col-sm-9">
+                            <a href="mailto:{{ contact.email }}" class="text-primary">{{ contact.email }}</a>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <strong>Phone:</strong>
+                        </div>
+                        <div class="col-sm-9">
+                            <a href="tel:{{ contact.telephone }}" class="text-primary">{{ contact.telephone }}</a>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <strong>Date Submitted:</strong>
+                        </div>
+                        <div class="col-sm-9">
+                            {{ contact.createdAt|date('F j, Y \\a\\t g:i A') }}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <strong>Message:</strong>
+                        </div>
+                        <div class="col-sm-9">
+                            <div class="border rounded p-3 bg-light">
+                                {{ contact.message|nl2br }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <a href="{{ path('admin_contacts') }}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to Contacts
+                            </a>
+                            <a href="mailto:{{ contact.email }}?subject=Re: Your Contact Message&body=Dear {{ contact.name }},%0D%0A%0D%0AThank you for contacting us.%0D%0A%0D%0ABest regards,%0D%0ASRSBSNS Team" class="btn btn-primary">
+                                <i class="bi bi-envelope"></i> Reply via Email
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Quick Actions</h5>
+                    
+                    <div class="d-grid gap-2">
+                        <a href="mailto:{{ contact.email }}" class="btn btn-outline-primary">
+                            <i class="bi bi-envelope me-2"></i>Send Email
+                        </a>
+                        <a href="tel:{{ contact.telephone }}" class="btn btn-outline-success">
+                            <i class="bi bi-telephone me-2"></i>Call Phone
+                        </a>
+                        <button type="button" class="btn btn-outline-info" onclick="copyToClipboard('{{ contact.email }}')">
+                            <i class="bi bi-clipboard me-2"></i>Copy Email
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Message Info</h5>
+                    
+                    <ul class="list-unstyled">
+                        <li><strong>ID:</strong> {{ contact.id }}</li>
+                        <li><strong>Length:</strong> {{ contact.message|length }} characters</li>
+                        <li><strong>Words:</strong> {{ contact.message|split(' ')|length }} words</li>
+                        <li><strong>Submitted:</strong> {{ contact.createdAt|date_modify('-now')|date('%R days ago') }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                // Create a toast notification
+                var toast = document.createElement('div');
+                toast.className = 'toast align-items-center text-white bg-success border-0 position-fixed';
+                toast.style.top = '20px';
+                toast.style.right = '20px';
+                toast.style.zIndex = '9999';
+                toast.innerHTML = `
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            Email copied to clipboard!
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                `;
+                document.body.appendChild(toast);
+                var bsToast = new bootstrap.Toast(toast);
+                bsToast.show();
+                
+                // Remove the toast after it's hidden
+                toast.addEventListener('hidden.bs.toast', function() {
+                    document.body.removeChild(toast);
+                });
+            });
+        }
+    </script>
+{% endblock %} 

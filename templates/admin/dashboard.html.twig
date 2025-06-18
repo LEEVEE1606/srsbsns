@@ -1,0 +1,214 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Dashboard - Admin{% endblock %}
+
+{% block main_content %}
+<div class="pagetitle">
+    <h1>Dashboard</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('admin_dashboard') }}">Home</a></li>
+            <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section dashboard">
+    <div class="row">
+        <!-- Left side columns -->
+        <div class="col-lg-8">
+            <div class="row">
+                <!-- Contact Messages Card -->
+                <div class="col-xxl-4 col-md-6">
+                    <div class="card info-card sales-card">
+                        <div class="filter">
+                            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                <li class="dropdown-header text-start">
+                                    <h6>Filter</h6>
+                                </li>
+                                <li><a class="dropdown-item" href="#">Today</a></li>
+                                <li><a class="dropdown-item" href="#">This Month</a></li>
+                                <li><a class="dropdown-item" href="#">This Year</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title">Contact Messages <span>| Total</span></h5>
+                            <div class="d-flex align-items-center">
+                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-envelope"></i>
+                                </div>
+                                <div class="ps-3">
+                                    <h6>{{ total_contacts }}</h6>
+                                    <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- API Calls Card -->
+                <div class="col-xxl-4 col-md-6">
+                    <div class="card info-card revenue-card">
+                        <div class="filter">
+                            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                <li class="dropdown-header text-start">
+                                    <h6>Filter</h6>
+                                </li>
+                                <li><a class="dropdown-item" href="#">Today</a></li>
+                                <li><a class="dropdown-item" href="#">This Month</a></li>
+                                <li><a class="dropdown-item" href="#">This Year</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title">API Calls <span>| This Month</span></h5>
+                            <div class="d-flex align-items-center">
+                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-code-slash"></i>
+                                </div>
+                                <div class="ps-3">
+                                    <h6>342</h6>
+                                    <span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Status Card -->
+                <div class="col-xxl-4 col-xl-12">
+                    <div class="card info-card customers-card">
+                        <div class="filter">
+                            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                <li class="dropdown-header text-start">
+                                    <h6>Filter</h6>
+                                </li>
+                                <li><a class="dropdown-item" href="#">Today</a></li>
+                                <li><a class="dropdown-item" href="#">This Month</a></li>
+                                <li><a class="dropdown-item" href="#">This Year</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title">System Status <span>| Current</span></h5>
+                            <div class="d-flex align-items-center">
+                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-check-circle"></i>
+                                </div>
+                                <div class="ps-3">
+                                    <h6>Online</h6>
+                                    <span class="text-success small pt-1 fw-bold">100%</span> <span class="text-muted small pt-2 ps-1">uptime</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Contact Messages -->
+                <div class="col-12">
+                    <div class="card recent-sales overflow-auto">
+                        <div class="filter">
+                            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                <li class="dropdown-header text-start">
+                                    <h6>Filter</h6>
+                                </li>
+                                <li><a class="dropdown-item" href="#">Today</a></li>
+                                <li><a class="dropdown-item" href="#">This Month</a></li>
+                                <li><a class="dropdown-item" href="#">This Year</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title">Recent Contact Messages <span>| Latest 5</span></h5>
+                            
+                            <table class="table table-borderless datatable">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for contact in recent_contacts %}
+                                    <tr>
+                                        <th scope="row"><a href="{{ path('admin_contact_view', {id: contact.id}) }}">#{{ contact.id }}</a></th>
+                                        <td>{{ contact.name }}</td>
+                                        <td><a href="mailto:{{ contact.email }}" class="text-primary">{{ contact.email }}</a></td>
+                                        <td>{{ contact.createdAt|date('M d, Y') }}</td>
+                                        <td><span class="badge bg-success">New</span></td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted">No contact messages yet</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right side columns -->
+        <div class="col-lg-4">
+            <!-- Quick Actions -->
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Quick Actions</h5>
+                    
+                    <div class="d-grid gap-2">
+                        <a href="{{ path('admin_contacts') }}" class="btn btn-primary">
+                            <i class="bi bi-envelope me-2"></i>View All Contacts
+                        </a>
+                        <a href="{{ path('admin_settings') }}" class="btn btn-outline-primary">
+                            <i class="bi bi-gear me-2"></i>Settings
+                        </a>
+                        <a href="{{ path('admin_api_setup') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-code-slash me-2"></i>API Setup
+                        </a>
+                        <a href="{{ path('app_home') }}" class="btn btn-outline-success">
+                            <i class="bi bi-house me-2"></i>View Website
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- News & Updates -->
+            <div class="card">
+                <div class="card-body pb-0">
+                    <h5 class="card-title">News &amp; Updates <span>| Today</span></h5>
+
+                    <div class="news">
+                        <div class="post-item clearfix">
+                            <img src="{{ asset('NiceAdmin/assets/img/news-1.jpg') }}" alt="">
+                            <h4><a href="#">SRSBSNS Application Update</a></h4>
+                            <p>New features added including enhanced contact management and API improvements...</p>
+                        </div>
+
+                        <div class="post-item clearfix">
+                            <img src="{{ asset('NiceAdmin/assets/img/news-2.jpg') }}" alt="">
+                            <h4><a href="#">Security Enhancement</a></h4>
+                            <p>Latest security patches applied for better protection of user data...</p>
+                        </div>
+
+                        <div class="post-item clearfix">
+                            <img src="{{ asset('NiceAdmin/assets/img/news-3.jpg') }}" alt="">
+                            <h4><a href="#">API Platform Update</a></h4>
+                            <p>API Platform upgraded to latest version with new documentation features...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 

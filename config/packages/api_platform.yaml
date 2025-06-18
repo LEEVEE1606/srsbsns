@@ -1,0 +1,49 @@
+api_platform:
+    title: 'SRSBSNS Test App API'
+    description: 'A comprehensive API for the SRSBSNS Test Application'
+    version: '1.0.0'
+    show_webby: false
+    
+    # API documentation
+    docs_formats:
+        jsonld: ['application/ld+json']
+        jsonhal: ['application/hal+json']
+        jsonapi: ['application/vnd.api+json']
+        json: ['application/json']
+        xml: ['application/xml', 'text/xml']
+        html: ['text/html']
+    
+    # Enable Swagger UI documentation
+    enable_swagger_ui: true
+    enable_re_doc: true
+    
+    # Default formats
+    formats:
+        json: ['application/json']
+        jsonld: ['application/ld+json']
+        html: ['text/html']
+    
+    # Pagination settings
+    defaults:
+        pagination_enabled: true
+        pagination_items_per_page: 10
+        pagination_maximum_items_per_page: 100
+        pagination_partial: false
+        pagination_client_enabled: true
+        pagination_client_items_per_page: true
+        pagination_client_partial: true
+    
+    # Exception handling
+    exception_to_status:
+        Symfony\Component\Serializer\Exception\ExceptionInterface: 400
+        ApiPlatform\Core\Exception\InvalidArgumentException: 400
+        ApiPlatform\Core\Exception\FilterValidationException: 400
+        Doctrine\ORM\OptimisticLockException: 409
+        
+    # OpenAPI specification
+    openapi:
+        contact:
+            name: 'SRSBSNS Support'
+            email: 'support@srsbsns.local'
+        license:
+            name: 'Proprietary'

@@ -5,6 +5,11 @@ framework:
     # Note that the session will be started ONLY if you read or write from it.
     session: true
 
+    # Assets configuration
+    assets:
+        # Base URL for assets
+        base_path: /
+
     #esi: true
     #fragments: true
 
