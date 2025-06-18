@@ -1,128 +1,196 @@
--- SRSBSNS Test App - Production Database Schema
--- Created by Lee van Rensburg
--- Symfony 7.3 Application with Contact Management, User Authentication, and REST API
+-- phpMyAdmin SQL Dump
+-- version 5.2.1deb3
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost:3306
+-- Generation Time: Jun 18, 2025 at 03:36 PM
+-- Server version: 8.0.42-0ubuntu0.24.04.1
+-- PHP Version: 8.3.6
 
--- =====================================================
--- 1. CREATE DATABASE (Optional - create manually if needed)
--- =====================================================
--- CREATE DATABASE IF NOT EXISTS `srsbsns` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
--- USE `srsbsns`;
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
--- =====================================================
--- 2. CORE APPLICATION TABLES
--- =====================================================
 
--- Users table for admin authentication and API access
-CREATE TABLE `users` (
-    `id` INT AUTO_INCREMENT NOT NULL,
-    `email` VARCHAR(255) NOT NULL,
-    `roles` JSON NOT NULL,
-    `password` VARCHAR(255) NOT NULL,
-    `first_name` VARCHAR(255) NOT NULL,
-    `last_name` VARCHAR(255) NOT NULL,
-    `is_active` TINYINT(1) NOT NULL DEFAULT 1,
-    `created_at` DATETIME NOT NULL,
-    `updated_at` DATETIME DEFAULT NULL,
-    PRIMARY KEY(`id`),
-    UNIQUE INDEX `UNIQ_1483A5E9E7927C74` (`email`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
--- Contacts table for contact form submissions
-CREATE TABLE `contacts` (
-    `id` INT AUTO_INCREMENT NOT NULL,
-    `name` VARCHAR(100) NOT NULL,
-    `email` VARCHAR(255) NOT NULL,
-    `telephone` VARCHAR(20) NOT NULL,
-    `message` LONGTEXT NOT NULL,
-    `created_at` DATETIME NOT NULL,
-    PRIMARY KEY(`id`),
-    INDEX `IDX_33401573B23DB7B8` (`created_at`),
-    INDEX `IDX_33401573E7927C74` (`email`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+--
+-- Database: `srsbsns`
+--
 
--- Admin configuration table for application settings
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin_config`
+--
+
 CREATE TABLE `admin_config` (
-    `id` INT AUTO_INCREMENT NOT NULL,
-    `config_key` VARCHAR(100) NOT NULL,
-    `config_value` LONGTEXT NOT NULL,
-    `updated_at` DATETIME NOT NULL,
-    PRIMARY KEY(`id`),
-    UNIQUE INDEX `UNIQ_89421E8595D1CAA6` (`config_key`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+  `id` int NOT NULL,
+  `config_key` varchar(100) NOT NULL,
+  `config_value` longtext NOT NULL,
+  `updated_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Migration versions table for Doctrine migrations
+--
+-- Dumping data for table `admin_config`
+--
+
+INSERT INTO `admin_config` (`id`, `config_key`, `config_value`, `updated_at`) VALUES
+(1, 'admin_email', 'leevee@itsonline.biz', '2025-06-18 15:18:43'),
+(2, 'cc_email', '', '2025-06-18 15:18:43'),
+(3, 'recaptcha_site_key', '6LccrRsqAAAAABW8J8Qs5rWyPXLamwk2MF0l3ASg', '2025-06-18 15:18:43'),
+(4, 'recaptcha_secret_key', '6LccrRsqAAAAACsljVWeTKp2r925MVianOyUfXqd', '2025-06-18 15:18:43');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `api_call`
+--
+
+CREATE TABLE `api_call` (
+  `id` int NOT NULL,
+  `endpoint` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `method` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status_code` int NOT NULL,
+  `user_agent` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
+  `response_time` double DEFAULT NULL,
+  `user_identifier` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contacts`
+--
+
+CREATE TABLE `contacts` (
+  `id` int NOT NULL,
+  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `telephone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `message` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `doctrine_migration_versions`
+--
+
 CREATE TABLE `doctrine_migration_versions` (
-    `version` VARCHAR(191) NOT NULL,
-    `executed_at` DATETIME DEFAULT NULL,
-    `execution_time` INT DEFAULT NULL,
-    PRIMARY KEY(`version`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+  `version` varchar(191) COLLATE utf8mb4_general_ci NOT NULL,
+  `executed_at` datetime DEFAULT NULL,
+  `execution_time` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- =====================================================
--- 3. INSERT INITIAL DATA
--- =====================================================
+--
+-- Dumping data for table `doctrine_migration_versions`
+--
 
--- Create default admin user
--- Email: admin@srsbsns.com, Password: admin123
-INSERT INTO `users` (`email`, `roles`, `password`, `first_name`, `last_name`, `is_active`, `created_at`) VALUES 
-('admin@srsbsns.com', '["ROLE_ADMIN"]', '$2y$13$6.lOe0KtZl.3k7oM7lY.D.xY1M4xVrNkJMPdEUcLcJYfVwZz3xK2u', 'Admin', 'User', 1, NOW());
+INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_time`) VALUES
+('DoctrineMigrations\\Version20250617111934', NULL, NULL),
+('DoctrineMigrations\\Version20250618070357', '2025-06-18 07:04:04', 268),
+('DoctrineMigrations\\Version20250618153003', NULL, NULL),
+('DoctrineMigrations\\Version20250618153037', NULL, NULL);
 
--- Create default API user
--- Email: apiuser@srsbsns.com, Password: api123
-INSERT INTO `users` (`email`, `roles`, `password`, `first_name`, `last_name`, `is_active`, `created_at`) VALUES 
-('apiuser@srsbsns.com', '["ROLE_API_USER"]', '$2y$13$6.lOe0KtZl.3k7oM7lY.D.xY1M4xVrNkJMPdEUcLcJYfVwZz3xK2u', 'API', 'User', 1, NOW());
+-- --------------------------------------------------------
 
--- Insert default configuration settings
-INSERT INTO `admin_config` (`config_key`, `config_value`, `updated_at`) VALUES 
-('admin_email', 'admin@srsbsns.com', NOW()),
-('cc_email', '', NOW()),
-('recaptcha_site_key', '', NOW()),
-('recaptcha_secret_key', '', NOW());
+--
+-- Table structure for table `users`
+--
 
--- =====================================================
--- 4. SAMPLE DATA (Optional - for demonstration)
--- =====================================================
+CREATE TABLE `users` (
+  `id` int NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `roles` json NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `first_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `last_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_active` tinyint(1) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Insert sample contact form submission
-INSERT INTO `contacts` (`name`, `email`, `telephone`, `message`, `created_at`) VALUES 
-('John Doe', 'john.doe@example.com', '+1234567890', 'This is a sample contact form submission for testing purposes.', NOW()),
-('Jane Smith', 'jane.smith@example.com', '+0987654321', 'Hello! I am interested in learning more about your services. Please get back to me at your earliest convenience.', NOW());
+--
+-- Dumping data for table `users`
+--
 
--- =====================================================
--- 5. IMPORTANT NOTES FOR PRODUCTION DEPLOYMENT
--- =====================================================
+INSERT INTO `users` (`id`, `email`, `roles`, `password`, `first_name`, `last_name`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'admin@srsbsns.com', '[\"ROLE_ADMIN\"]', '$2y$13$HzEqFfaFwDtGCGR4MBhBK.yJo7uz7GRwS4XmCjyF7UuGi6/A5PROi', 'Admin', 'User', 1, '2025-06-17 19:14:19', NULL),
+(2, 'apiuser@srsbsns.com', '[\"ROLE_API_USER\"]', '$2y$13$6.lOe0KtZl.3k7oM7lY.D.xY1M4xVrNkJMPdEUcLcJYWEpjgKF8zS', 'API', 'User', 1, '2025-06-18 05:02:35', NULL);
 
--- SECURITY CHECKLIST:
--- 1. Change default passwords immediately after deployment
--- 2. Update admin_email to your actual admin email address
--- 3. Configure reCAPTCHA keys for spam protection
--- 4. Set up proper email SMTP configuration in .env
--- 5. Generate new JWT keys for API authentication
--- 6. Review and update all environment variables
+--
+-- Indexes for dumped tables
+--
 
--- PERFORMANCE OPTIMIZATION:
--- 1. Add appropriate indexes for frequently queried columns
--- 2. Consider partitioning contacts table if expecting high volume
--- 3. Set up proper MySQL configuration for your server specs
+--
+-- Indexes for table `admin_config`
+--
+ALTER TABLE `admin_config`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `UNIQ_89421E8595D1CAA6` (`config_key`);
 
--- BACKUP STRATEGY:
--- 1. Schedule regular database backups
--- 2. Test backup restoration procedures
--- 3. Keep backups in secure, offsite location
+--
+-- Indexes for table `api_call`
+--
+ALTER TABLE `api_call`
+  ADD PRIMARY KEY (`id`);
 
--- ACCESS CREDENTIALS (CHANGE IMMEDIATELY):
--- Admin Panel: /admin/login
---   Email: admin@srsbsns.com
---   Password: admin123
--- 
--- API Access: POST /api/login_check
---   Email: apiuser@srsbsns.com  
---   Password: api123
+--
+-- Indexes for table `contacts`
+--
+ALTER TABLE `contacts`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_33401573B23DB7B8` (`created_at`),
+  ADD KEY `IDX_33401573E7927C74` (`email`);
 
--- For additional security, run these commands after deployment:
--- php bin/console security:hash-password [new_password]
--- php bin/console app:create-users (to recreate users with new passwords)
+--
+-- Indexes for table `doctrine_migration_versions`
+--
+ALTER TABLE `doctrine_migration_versions`
+  ADD PRIMARY KEY (`version`);
 
--- =====================================================
--- END OF SRSBSNS DATABASE SCHEMA
--- =====================================================
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `admin_config`
+--
+ALTER TABLE `admin_config`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `api_call`
+--
+ALTER TABLE `api_call`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `contacts`
+--
+ALTER TABLE `contacts`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
