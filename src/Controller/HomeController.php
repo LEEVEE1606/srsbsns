@@ -10,19 +10,56 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * Home Controller
+ * 
+ * Handles public-facing pages including the homepage, contact form,
+ * about page, and API documentation. These routes are publicly accessible.
+ * 
+ * @package App\Controller
+ */
 class HomeController extends AbstractController
 {
+    /**
+     * Constructor
+     * 
+     * @param ContactService $contactService Service for handling contact operations
+     */
     public function __construct(
         private ContactService $contactService
     ) {
     }
 
+    /**
+     * Homepage
+     * 
+     * Displays the main landing page with feature overview, technology stack,
+     * and call-to-action buttons. This is the primary entry point for visitors.
+     * 
+     * @return Response Rendered homepage with feature showcase
+     */
     #[Route('/', name: 'app_home')]
     public function index(): Response
     {
         return $this->render('home/index.html.twig');
     }
 
+    /**
+     * Contact Form Page
+     * 
+     * Displays and handles the contact form submission. Includes reCAPTCHA validation
+     * and email notifications. Supports both GET (display form) and POST (process form) methods.
+     * 
+     * Features:
+     * - Form validation with Symfony Form component
+     * - reCAPTCHA integration for spam protection
+     * - Database storage of contact submissions
+     * - Email notifications to administrators
+     * - Error handling and user feedback
+     * 
+     * @param Request $request HTTP request containing form data and reCAPTCHA response
+     * @return Response Contact form page or redirect after successful submission
+     */
     #[Route('/contact', name: 'app_contact')]
     public function contact(Request $request): Response
     {
@@ -64,12 +101,28 @@ class HomeController extends AbstractController
         ]);
     }
 
+    /**
+     * About Page
+     * 
+     * Displays information about the application, its features, and the development team.
+     * Static content page with company/project information.
+     * 
+     * @return Response Rendered about page
+     */
     #[Route('/about', name: 'app_about')]
     public function about(): Response
     {
         return $this->render('home/about.html.twig');
     }
 
+    /**
+     * API Documentation Page
+     * 
+     * Displays API documentation and usage instructions for developers.
+     * Shows available endpoints, authentication methods, and example requests.
+     * 
+     * @return Response Rendered API documentation page
+     */
     #[Route('/api-docs', name: 'app_api_docs')]
     public function apiDocs(): Response
     {

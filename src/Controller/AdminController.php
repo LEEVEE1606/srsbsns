@@ -14,9 +14,24 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+/**
+ * Admin Controller
+ * 
+ * Handles all administrative functions including user management, contact management,
+ * system settings, and dashboard analytics. All routes require ROLE_ADMIN permission.
+ * 
+ * @package App\Controller
+ */
 #[Route('/admin')]
 class AdminController extends AbstractController
 {
+    /**
+     * Constructor
+     * 
+     * @param ContactService $contactService Service for handling contact operations
+     * @param EntityManagerInterface $entityManager Doctrine entity manager
+     * @param UserPasswordHasherInterface $passwordHasher Password hashing service
+     */
     public function __construct(
         private ContactService $contactService,
         private EntityManagerInterface $entityManager,
@@ -24,6 +39,15 @@ class AdminController extends AbstractController
     ) {
     }
 
+    /**
+     * Admin Login Page
+     * 
+     * Displays the admin login form. If user is already authenticated,
+     * redirects to admin dashboard.
+     * 
+     * @param AuthenticationUtils $authenticationUtils Symfony authentication utilities
+     * @return Response Rendered login page with error messages if any
+     */
     #[Route('/login', name: 'admin_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -40,12 +64,30 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * Admin Logout
+     * 
+     * Handles admin logout. This method is intercepted by the security firewall.
+     * The actual logout logic is handled by Symfony's security system.
+     * 
+     * @return void This method should never be called directly
+     * @throws \LogicException Always thrown as this method is intercepted
+     */
     #[Route('/logout', name: 'admin_logout')]
     public function logout(): void
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
+    /**
+     * Admin Dashboard
+     * 
+     * Displays the main admin dashboard with analytics and recent activity.
+     * Shows contact statistics, API call metrics, and recent data.
+     * 
+     * @return Response Dashboard page with analytics data
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException If user lacks ROLE_ADMIN
+     */
     #[Route('/', name: 'admin_dashboard')]
     public function dashboard(): Response
     {
@@ -77,6 +119,16 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * Contact List Page
+     * 
+     * Displays a paginated list of all contact form submissions.
+     * Supports pagination with configurable page size.
+     * 
+     * @param Request $request HTTP request containing pagination parameters
+     * @return Response Contact list page with pagination
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException If user lacks ROLE_ADMIN
+     */
     #[Route('/contacts', name: 'admin_contacts')]
     public function contacts(Request $request): Response
     {
@@ -99,6 +151,16 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * Contact Detail View
+     * 
+     * Displays detailed information about a specific contact submission.
+     * Shows all contact form fields and submission timestamp.
+     * 
+     * @param Contact $contact Contact entity to display (automatically resolved by Symfony)
+     * @return Response Contact detail page
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException If user lacks ROLE_ADMIN
+     */
     #[Route('/contact/{id}', name: 'admin_contact_view')]
     public function viewContact(Contact $contact): Response
     {
@@ -109,6 +171,16 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * System Settings Page
+     * 
+     * Displays and handles updates to system configuration settings.
+     * Supports both GET (display form) and POST (update settings) methods.
+     * 
+     * @param Request $request HTTP request containing form data
+     * @return Response Settings page or redirect after update
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException If user lacks ROLE_ADMIN
+     */
     #[Route('/settings', name: 'admin_settings')]
     public function settings(Request $request): Response
     {
@@ -150,6 +222,15 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * API Setup Page
+     * 
+     * Displays API documentation and setup instructions for developers.
+     * Shows JWT authentication details and endpoint information.
+     * 
+     * @return Response API setup documentation page
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException If user lacks ROLE_ADMIN
+     */
     #[Route('/api-setup', name: 'admin_api_setup')]
     public function apiSetup(): Response
     {
@@ -158,6 +239,16 @@ class AdminController extends AbstractController
         return $this->render('admin/api_setup.html.twig');
     }
 
+    /**
+     * User List Page
+     * 
+     * Displays a paginated list of all system users.
+     * Supports pagination and shows user status and roles.
+     * 
+     * @param Request $request HTTP request containing pagination parameters
+     * @return Response User list page with pagination
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException If user lacks ROLE_ADMIN
+     */
     #[Route('/users', name: 'admin_users')]
     public function users(Request $request): Response
     {
@@ -180,6 +271,17 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * Create User Page
+     * 
+     * Displays form to create a new user and handles user creation.
+     * Supports both GET (display form) and POST (create user) methods.
+     * Validates required fields and handles password hashing.
+     * 
+     * @param Request $request HTTP request containing user data
+     * @return Response User creation form or redirect after creation
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException If user lacks ROLE_ADMIN
+     */
     #[Route('/user/create', name: 'admin_user_create')]
     public function createUser(Request $request): Response
     {
@@ -235,6 +337,18 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * Edit User Page
+     * 
+     * Displays form to edit an existing user and handles user updates.
+     * Supports both GET (display form) and POST (update user) methods.
+     * Validates required fields and handles optional password updates.
+     * 
+     * @param User $user User entity to edit (automatically resolved by Symfony)
+     * @param Request $request HTTP request containing user data
+     * @return Response User edit form or redirect after update
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException If user lacks ROLE_ADMIN
+     */
     #[Route('/user/{id}/edit', name: 'admin_user_edit')]
     public function editUser(User $user, Request $request): Response
     {
@@ -299,13 +413,23 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * Delete User
+     * 
+     * Deletes a user from the system. Users cannot delete themselves.
+     * Requires POST method for security. Shows error if attempting to delete self.
+     * 
+     * @param User $user User entity to delete (automatically resolved by Symfony)
+     * @return Response Redirect to user list with success/error message
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException If user lacks ROLE_ADMIN
+     */
     #[Route('/user/{id}/delete', name: 'admin_user_delete', methods: ['POST'])]
     public function deleteUser(User $user): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        // Prevent deleting yourself
-        if ($user === $this->getUser()) {
+        // Prevent self-deletion
+        if ($user->getId() === $this->getUser()->getId()) {
             $this->addFlash('error', 'You cannot delete your own account.');
             return $this->redirectToRoute('admin_users');
         }
@@ -317,13 +441,23 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('admin_users');
     }
 
+    /**
+     * Toggle User Status
+     * 
+     * Activates or deactivates a user account. Users cannot deactivate themselves.
+     * Requires POST method for security. Shows error if attempting to deactivate self.
+     * 
+     * @param User $user User entity to toggle status (automatically resolved by Symfony)
+     * @return Response Redirect to user list with success/error message
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException If user lacks ROLE_ADMIN
+     */
     #[Route('/user/{id}/toggle-status', name: 'admin_user_toggle_status', methods: ['POST'])]
     public function toggleUserStatus(User $user): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        // Prevent deactivating yourself
-        if ($user === $this->getUser() && $user->isActive()) {
+        // Prevent self-deactivation
+        if ($user->getId() === $this->getUser()->getId()) {
             $this->addFlash('error', 'You cannot deactivate your own account.');
             return $this->redirectToRoute('admin_users');
         }
@@ -334,16 +468,23 @@ class AdminController extends AbstractController
 
         $status = $user->isActive() ? 'activated' : 'deactivated';
         $this->addFlash('success', "User {$status} successfully!");
-        
         return $this->redirectToRoute('admin_users');
     }
 
+    /**
+     * Get Available Roles
+     * 
+     * Returns an array of all available user roles in the system.
+     * Used by user forms to populate role selection dropdowns.
+     * 
+     * @return array Array of available role names
+     */
     private function getAvailableRoles(): array
     {
         return [
             'ROLE_USER' => 'User',
-            'ROLE_ADMIN' => 'Administrator',
             'ROLE_API_USER' => 'API User',
+            'ROLE_ADMIN' => 'Administrator',
         ];
     }
 } 
